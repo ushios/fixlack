@@ -1,8 +1,9 @@
 package fixlack
 
 import (
+	"encoding/hex"
 	"errors"
-	"fmt"
+	"io"
 	"io/ioutil"
 	"log"
 	"os"
@@ -16,7 +17,7 @@ var (
 )
 
 func init() {
-	unicodeRegexp = regexp.MustCompile("(u([0-9a-fA-F]{4}))")
+	unicodeRegexp = regexp.MustCompile("(u[0-9a-fA-F]{4})")
 }
 
 func Fixlack(path string) error {
@@ -32,13 +33,13 @@ func Fixlack(path string) error {
 
 	for _, file := range files {
 		if file.IsDir() {
-			log.Println(file.Name(), "is directory")
+			// log.Println(file.Name(), "is directory")
 			continue
 		}
 
 		switch file.Mode() {
 		case os.ModeSymlink:
-			log.Println(file.Name(), "is symblic link")
+			// log.Println(file.Name(), "is symblic link")
 			continue
 		}
 
@@ -60,11 +61,32 @@ func fixlack(path string, file os.FileInfo) error {
 		}
 		defer origin.Close()
 
-		destName := unicodeRegexp.ReplaceAllString(file.Name(), `\u$2`)
-		fmt.Println("destName", destName)
-		fmt.Println("Go\u8a00\u8a9e\u306b\u3088\u308bWeb\u30a2\u30d5\u309a\u30ea\u30b1\u30fc\u30b7\u30e7\u30f3\u958b\u767a.pdf")
+		destFileName := unicodeRegexp.ReplaceAllStringFunc(
+			file.Name(),
+			func(s string) string {
+				h := s[1:5]
+				dec, err := hex.DecodeString(h)
+				if err != nil {
+					panic(err)
+				}
+				i := int(dec[0])*16*16 + int(dec[1])
 
-		log.Println("path: ", fullpath)
+				return string(i)
+			},
+		)
+
+		destFullPath := filepath.Join(path, destFileName)
+		dest, err := os.Create(destFullPath)
+		if err != nil {
+			return err
+		}
+		defer dest.Close()
+
+		if _, err := io.Copy(dest, origin); err != nil {
+			return err
+		}
+
+		log.Println("create: ", destFullPath)
 	}
 
 	return nil
