@@ -1,7 +1,7 @@
 fixlack
 ========
 
-Fix filename that downloaded from slack.
+Create copy file from broken filenamed file that downloaded from slack.
 
 Installation
 =============
