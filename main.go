@@ -1,9 +1,15 @@
 package main
 
-import "github.com/ushios/fixlack/lib/fixlack"
+import (
+	"os"
+	"path/filepath"
+
+	"github.com/ushios/fixlack/lib/fixlack"
+)
 
 func main() {
-	if err := fixlack.Fixlack("/Users/ushio/Downloads"); err != nil {
+	home := os.Getenv("HOME")
+	if err := fixlack.Fixlack(filepath.Join(home, "Downloads")); err != nil {
 		panic(err)
 	}
 }
