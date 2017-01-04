@@ -1,7 +1,7 @@
 fixlack
 ========
 
-Create copy file from broken filenamed file in `~/Downloads` directory that downloaded from slack.
+Create copy file from broken named file that downloaded from slack.
 
 
 before:  
@@ -16,3 +16,10 @@ Installation
 ```bash
 $ go get github.com/ushios/fixlack
 ```
+Usage
+======
+
+``bash
+$ fixlack
+```
+in `~/Downloads` directory
