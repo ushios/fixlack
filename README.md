@@ -19,7 +19,7 @@ $ go get github.com/ushios/fixlack
 Usage
 ======
 
-``bash
+```bash
 $ fixlack
 ```
 in `~/Downloads` directory
