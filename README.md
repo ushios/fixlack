@@ -1,7 +1,7 @@
 fixlack
 ========
 
-Create copy file from broken filenamed file that downloaded from slack.
+Create copy file from broken filenamed file in `~/Downloads` directory that downloaded from slack.
 
 
 before:  
